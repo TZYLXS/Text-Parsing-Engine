@@ -20,7 +20,7 @@
 ## 仓库结构
 
 ```
-server/ebook/            服务端引擎（Node.js，无第三方依赖）
+server/ebook/            服务端引擎（Node.js，仅额外依赖 legado-web 已有的 cheerio）
   store.js               登记表 + 书目录 + 章节/分片落盘
   html.js                HTML → 段落块（k/t）
   epub.js                EPUB 解析

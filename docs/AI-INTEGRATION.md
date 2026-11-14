@@ -11,7 +11,7 @@
 
 本引擎只负责“把书变成 JSON”和“把 JSON 渲染成目录/正文”。
 
-- 服务端只解析 PDF / TXT；EPUB / MOBI 的服务端解析只作为兜底。
+- 服务端解析 PDF / TXT 为主；EPUB / MOBI 的服务端解析只作为兜底。
 - 安卓端只解析 EPUB / MOBI；PDF / TXT 不会派给手机。
 - 原文件只下发一次，客户端解析完回传 JSON 分片，服务端落盘后不再解析原文件。
 - 书 URL 固定为 `ebook://<sha1>`，来源（device/server）变化不改变 URL。
@@ -41,7 +41,12 @@
 | `server/ebook/render.js` | 同上目录 | `ebook://` 目录/正文 |
 | `android/reference/FnReaderEbook.kt` | `app/src/main/java/io/legado/app/model/FnReaderEbook.kt` | 安卓 EPUB/MOBI 解析与分片 |
 
-服务端模块只依赖 Node 内置模块（`fs`、`path`、`crypto`、`zlib`、`http`），不要额外引入 npm 包。
+服务端模块依赖 Node 内置模块（`fs`、`path`、`crypto`、`zlib`）外加 `cheerio`：
+
+- `server/ebook/html.js`、`epub.js`、`mobi.js` 都 `require('cheerio')`，用于 HTML/XML 解码与文本抽取；
+- `cheerio` 是 legado-web 服务端已有依赖（`app/server` 的 `package.json` 里已装），**不要为此新增 npm 包**；
+- 其余模块（`store.js`、`scan.js`、`bus.js`、`render.js`、`local.js`、`pdf.js`、`text.js`）只用内置模块。
+
 安卓端依赖 `org.json`（Android 自带）和 Jsoup（legado 已有依赖）。
 
 ---
